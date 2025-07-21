@@ -1,14 +1,5 @@
 export function cleanDynamic(obj: any): any {
-    if (!obj) return undefined;
-    if (obj.__dynamic !== undefined) return obj.__dynamic;
-    if (typeof obj === "object") {
-        const cleaned: any = Array.isArray(obj) ? [] : {};
-        for (const key in obj) {
-            cleaned[key] = cleanDynamic(obj[key]);
-        }
-        return cleaned;
-    }
-    return obj;
+    return obj.__dynamic;
 }
 
 

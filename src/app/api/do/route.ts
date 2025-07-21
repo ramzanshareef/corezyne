@@ -35,18 +35,14 @@ export async function POST(req: Request) {
                 {
                     role: "model",
                     parts: [{
-                        text: `You are an expert in MongoDB. Convert natural language commands into structured MongoDB operations.`
+                        text: `You are an expert in MongoDB. You convert natural language commands into structured MongoDB operations. While returning user data any time, write query such that no personal data or password is sent back. Use "register" or "login" as operation names for auth-related actions. Allowed operations are: ${ALLOWED_OPERATIONS.join(", ")}. Do not hallucinate operations or collections. If the command is invalid or contains blocked keywords, return an error message.
+                        `
                     }]
                 },
                 {
                     role: "user",
                     parts: [{
-                        text: `Convert this natural language command to one or more MongoDB operations based on the command given and evaluate how many commands are required and give according to that: ${command}
-1. Each operation must be in JSON format with fields: operation, collection, query, data, and options.
-2. If multiple operations are required, return them as an array of JSON objects.
-3. ALWAYS EXCLUDE PASSWORDS AND SENSITIVE DATA FROM THE FIND AND QUERY OPERATIONS YOU GENERATE.
-4. Use "register" or "login" as operation names for auth-related actions.
-5. For update operations, use correct MongoDB update syntax and $set if needed.`
+                        text: `Convert this natural language command  ${command}`
                     }]
                 }
             ],
@@ -64,7 +60,7 @@ export async function POST(req: Request) {
         } catch {
             return NextResponse.json({ error: "Invalid JSON returned", raw: text }, { status: 500 });
         }
-
+        console.log("Parsed commands:", parsed);
         const db = await getClientDB(client);
         const session = await mongoose.startSession();
         session.startTransaction();
@@ -87,9 +83,17 @@ export async function POST(req: Request) {
                 }
 
                 const collection = db.collection(mongoCommand.collection);
-                const query = cleanDynamic(mongoCommand.query);
-                const data = cleanDynamic(mongoCommand.data);
-                const options = cleanDynamic(mongoCommand.options);
+                const query = (mongoCommand.query);
+                const data = (mongoCommand.data);
+                const options = (mongoCommand.options);
+
+                console.log("Executing command:", {
+                    operation: mongoCommand.operation,
+                    collection: mongoCommand.collection,
+                    query,
+                    data,
+                    options
+                });
 
                 const result = await executeOperation(
                     mongoCommand.operation,

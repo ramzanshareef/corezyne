@@ -38,19 +38,19 @@ export async function executeOperation(
             return { token };
         },
         find: async () => {
-            opts.projection = {
-                ...opts.projection,
-                __v: 0,
-                password: 0,
-            };
+            // opts.projection = {
+            //     ...opts.projection,
+            //     __v: 0,
+            //     password: 0,
+            // };
             return collection.find(query, opts).toArray();
         },
         findone: async () => {
-            opts.projection = {
-                ...opts.projection,
-                __v: 0,
-                password: 0,
-            };
+            // opts.projection = {
+            //     ...opts.projection,
+            //     __v: 0,
+            //     password: 0,
+            // };
             return await collection.findOne(query, opts);
         },
         findoneandupdate: async () => {

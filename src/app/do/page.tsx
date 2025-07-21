@@ -25,7 +25,8 @@ export default function DoPage() {
             });
 
             const data = await res.json();
-            setResult(data);
+            console.log(data.parsed);
+            setResult(data.result);
             setStatus(res.status);
         } catch (error) {
             setResult({ error: "Command execution failed" });
